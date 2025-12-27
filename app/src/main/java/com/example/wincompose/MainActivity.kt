@@ -14,32 +14,27 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.wincompose.ui.theme.WINComposeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            WINComposeTheme {
-                MainScreen()
-            }
+            MainScreen(MainViewModel())
         }
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(mainViewModel: MainViewModel) {
 
     Log.i("MainScreen", "MainScreen Invoked")
 
-    var counter by rememberSaveable { mutableIntStateOf(0) }
-
+    val counter by mainViewModel.counter.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -51,7 +46,7 @@ fun MainScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = {
-                counter++
+                mainViewModel.incrementCounter()
                 Log.i("MainScreen", "$counter")
             }) {
                 Text(text = "Increase")
@@ -60,7 +55,7 @@ fun MainScreen() {
             Text(text = "Counter Value: $counter")
 
             Button(onClick = {
-                counter--
+                mainViewModel.decrementCounter()
                 Log.i("MainScreen", "$counter")
             }) {
                 Text(text = "Decrease")
