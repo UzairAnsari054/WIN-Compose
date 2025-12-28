@@ -9,24 +9,18 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxSize import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -63,35 +57,24 @@ fun MainScreen(mainViewModel: MainViewModel) {
         }
     }
 
-    val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = true) {
+        Log.i("MainScreen", "LaunchedEffect Invoked")
+        startCounter { mainViewModel.incrementCounter() }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    startCounter { mainViewModel.incrementCounter() }
-                }
-            }) {
-                Text(text = "Start Counter")
-            }
+        Log.i("MainScreen", "$counter")
 
-            Log.i("MainScreen", "$counter")
+        Text(
+            text = "Counter Value: $counter",
+            modifier = Modifier
+                .background(counterBgColor)
+                .padding(20.dp)
 
-            Text(
-                text = "Counter Value: $counter",
-                modifier = Modifier
-                    .background(counterBgColor)
-                    .padding(20.dp)
-
-            )
-        }
+        )
     }
 }
 
