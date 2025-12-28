@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,6 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+
+enum class CounterState {
+    STARTED, PROGRESS, COMPLETED
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -77,6 +82,22 @@ fun MainScreen() {
         onDispose {
             Log.i("DisposableEffect", "onDisposes Called")
         }
+    }
+
+    var counterState by remember { mutableStateOf(CounterState.STARTED) }
+    SideEffect {
+        when (counter) {
+            0 -> {
+                counterState = CounterState.STARTED
+            }
+
+            5 -> {
+                counterState = CounterState.COMPLETED
+            }
+
+            else -> counterState = CounterState.PROGRESS
+        }
+        Log.i("CounterState", "$counterState")
     }
 
     Column(
