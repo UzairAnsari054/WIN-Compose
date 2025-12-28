@@ -20,10 +20,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -35,6 +38,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen(mainViewModel = viewModel)
         }
+    }
+}
+
+suspend fun startCounter(
+    increment: () -> Unit
+) {
+    for (i in 1..100) {
+        delay(1000)
+        increment()
     }
 }
 
@@ -51,6 +63,8 @@ fun MainScreen(mainViewModel: MainViewModel) {
         }
     }
 
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -61,11 +75,14 @@ fun MainScreen(mainViewModel: MainViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = {
-                mainViewModel.incrementCounter()
-                Log.i("MainScreen", "$counter")
+                scope.launch {
+                    startCounter { mainViewModel.incrementCounter() }
+                }
             }) {
-                Text(text = "Increase")
+                Text(text = "Start Counter")
             }
+
+            Log.i("MainScreen", "$counter")
 
             Text(
                 text = "Counter Value: $counter",
@@ -74,13 +91,6 @@ fun MainScreen(mainViewModel: MainViewModel) {
                     .padding(20.dp)
 
             )
-
-            Button(onClick = {
-                mainViewModel.decrementCounter()
-                Log.i("MainScreen", "$counter")
-            }) {
-                Text(text = "Decrease")
-            }
         }
     }
 }
