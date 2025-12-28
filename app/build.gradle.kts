@@ -59,4 +59,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.constraintlayout)
+
 }
