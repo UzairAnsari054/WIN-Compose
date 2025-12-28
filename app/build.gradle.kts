@@ -61,4 +61,6 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.compose.constraintlayout)
 
+    implementation("androidx.compose.material:material-icons-extended")
+
 }
