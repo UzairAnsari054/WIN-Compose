@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -71,6 +72,12 @@ fun MainScreen() {
     }
 
     val context = LocalContext.current
+
+    DisposableEffect(key1 = true) {
+        onDispose {
+            Log.i("DisposableEffect", "onDisposes Called")
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
