@@ -6,18 +6,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
 
@@ -39,6 +45,12 @@ fun MainScreen(mainViewModel: MainViewModel) {
 
     val counter by mainViewModel.counter.observeAsState()
 
+    val counterBgColor by remember(counter) {
+        derivedStateOf {
+            if (counter?.rem(2) == 0) Color.Green else Color.Red
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -55,7 +67,13 @@ fun MainScreen(mainViewModel: MainViewModel) {
                 Text(text = "Increase")
             }
 
-            Text(text = "Counter Value: $counter")
+            Text(
+                text = "Counter Value: $counter",
+                modifier = Modifier
+                    .background(counterBgColor)
+                    .padding(20.dp)
+
+            )
 
             Button(onClick = {
                 mainViewModel.decrementCounter()
